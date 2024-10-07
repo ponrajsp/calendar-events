@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -10,20 +7,19 @@ import interactionPlugin from '@fullcalendar/interaction'
 import eventMeeting from '../utils/calendar_meeting.json'
 import eventsDate from '../utils/calendarfromtoenddate.json'
 import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
+import { useRouter } from 'next/router';
 import moment from 'moment';
 import Modal from './modal';
 
 export default function Calendar() {
+    const router = useRouter();
     const [currentEvents, setCurrentEvents] = useState([])
     const [modalOpen, setModalOpen] = useState(false);
     const [eventDetail, SetEventDetail] = useState()
     function handleEventClick(info) {
         setModalOpen(true)
-        console.log(info.event);
+        console.log(info.event)
         SetEventDetail(info.event)
-    }
-    function close() {
-      setModalOpen(false);
     }
     function handleEvents(events) {
         setCurrentEvents(events)
@@ -74,18 +70,31 @@ export default function Calendar() {
                     </li>
                   </ul>
                   <div className='event-btn-download'>
-                    <button>Resume docx</button>
-                    <button>Aadhar Card</button>
+                    <a className='event-download-btn' href={eventDetail.extendedProps.link} 
+                        target="_blank" rel="noopener noreferrer">
+                        <span>Resume docx </span>
+                        <img className='download-icon' src={`/images/download.png`}></img>
+                        <img className='download-icon' src={`/images/view.png`}></img>
+                    </a>
+                    <a className='event-download-btn' href={eventDetail.extendedProps.link} 
+                        target="_blank" rel="noopener noreferrer">
+                        <span>Aadhar Card </span>
+                        <img className='download-icon' src={`/images/download.png`}></img>
+                        <img className='download-icon' src={`/images/view.png`}></img>
+                    </a>
                   </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column'}}>
+                <div className='google-meet-container'>
                   <img src={`/images/logo-meet.png`}></img>
-                  <button>JOIN</button>
+                  <a className='google-meet-btn' href={eventDetail.extendedProps.link} 
+                      target="_blank" rel="noopener noreferrer">
+                      <span>JOIN</span>
+                  </a>
+                  {/* <button onClick={googleMeetLink} type="button">JOIN</button> */}
                 </div>
               </div>
             </div>
           )}
-          
         </Modal>
       )}
     </div>

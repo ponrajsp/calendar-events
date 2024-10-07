@@ -84,3 +84,40 @@
     flex-direction: column;
     gap: 10px;
 }
+.google-meet-btn {
+    padding: 10px 5px;
+    border: 1px solid #3788d8;
+    background: #3788d8;
+    border-radius: 3px;
+    text-align: center;
+    text-decoration: none !important;
+}
+.google-meet-btn span {
+    color: #fff
+}
+.google-meet-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 35px;
+}
+.google-meet-container img {
+    height: 100px;
+    border: 1px solid #efefef;
+    padding: 5px;
+}
+.event-download-btn {
+    padding: 10px 5px;
+    border: 1px solid #3788d8;
+    background: #fff;
+    border-radius: 3px;
+    text-align: center;
+    text-decoration: none !important;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.download-icon {
+    width: 20px;
+    height: 20px;
+}
