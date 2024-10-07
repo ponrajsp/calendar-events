@@ -66,5 +66,21 @@
 .event-detail-info {
     border: 1px solid #d1cccc;
     width: 90%;
+    padding: 5px;
 }
-
+.event-detail-info .event-container-detail {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.event-detail-info .event-container-detail .list-detail {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.event-btn-download {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

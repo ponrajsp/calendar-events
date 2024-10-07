@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -13,10 +16,11 @@ import Modal from './modal';
 export default function Calendar() {
     const [currentEvents, setCurrentEvents] = useState([])
     const [modalOpen, setModalOpen] = useState(false);
-    const [eventDetail, SetEventDetail] = useState('')
+    const [eventDetail, SetEventDetail] = useState()
     function handleEventClick(info) {
         setModalOpen(true)
-        SetEventDetail(info.event.extendedProps)
+        console.log(info.event);
+        SetEventDetail(info.event)
     }
     function close() {
       setModalOpen(false);
@@ -45,28 +49,43 @@ export default function Calendar() {
     />
       {modalOpen && (
         <Modal onClose={() => setModalOpen(false)}>
-          <div className='event-detail-info'>
-            <ul>
-              <li>
-                Interviewer With: John Smith
-              </li>
-              <li>
-                Position: Python Developer
-              </li>
-              <li>
-                Created By: HR Manager
-              </li>
-              <li>
-                Interview Date: 6th March 2024
-              </li>
-              <li>
-                Interview Time: 10 - 11 AM
-              </li>
-              <li>
-                Interview Via: Google Meet
-              </li>
-            </ul>
-          </div>
+          {eventDetail && (
+            <div className='event-detail-info'>
+              <div className='event-container-detail'>
+                <div>
+                  <ul className='list-detail'>
+                    <li>
+                      Interviewer With: { eventDetail.extendedProps.user_det.handled_by.firstName }
+                    </li>
+                    <li>
+                      Position: { eventDetail.extendedProps.job_id.jobRequest_Title }
+                    </li>
+                    <li>
+                      Created By: { eventDetail.extendedProps.user_det.handled_by.firstName }
+                    </li>
+                    <li>
+                      Interview Date: { moment(eventDetail.start).format('DD MMM YYYY') }
+                    </li>
+                    <li>
+                      Interview Time: { moment(eventDetail.start).format('hh:mm A') }
+                    </li>
+                    <li>
+                      Interview Via: Google Meet
+                    </li>
+                  </ul>
+                  <div className='event-btn-download'>
+                    <button>Resume docx</button>
+                    <button>Aadhar Card</button>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column'}}>
+                  <img src={`/images/logo-meet.png`}></img>
+                  <button>JOIN</button>
+                </div>
+              </div>
+            </div>
+          )}
+          
         </Modal>
       )}
     </div>
