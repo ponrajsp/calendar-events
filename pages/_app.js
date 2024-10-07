@@ -1,5 +1,4 @@
 import React from 'react';
-// import CalendarComponent from '../components/CalendarComponent';
 import Calendar from '@/components/calendar';
 import '../styles/style.css'
 
