@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -16,13 +16,30 @@ export default function Calendar() {
     const [currentEvents, setCurrentEvents] = useState([])
     const [modalOpen, setModalOpen] = useState(false);
     const [eventDetail, SetEventDetail] = useState()
+    const [filteredEvents, setFilteredEvents] = useState([]);
+
+    useEffect(() => {
+      const transformedEvents = transformEvents(eventsDate);
+      setFilteredEvents(transformedEvents);
+    }, []);
+
     function handleEventClick(info) {
         setModalOpen(true)
-        console.log(info.event)
         SetEventDetail(info.event)
     }
     function handleEvents(events) {
         setCurrentEvents(events)
+    }
+    function dayCellContent(cellInfo) {
+      const eventsForDay = currentEvents.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
+      return (
+        <div className="day-cell">
+          <div>{cellInfo.dayNumberText}</div>
+          {eventsForDay.length > 0 && (
+            <div className="event-count">{eventsForDay.length}</div>
+          )}
+        </div>
+      );
     }
   return (
     <div>
@@ -31,7 +48,7 @@ export default function Calendar() {
         headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek'
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
         initialView="dayGridMonth"
         editable={true}
@@ -39,9 +56,11 @@ export default function Calendar() {
         selectMirror={true}
         dayMaxEvents={true}
         events={eventsDate}
-        eventContent={renderEventContent}
+        // eventContent={renderEventContent}
+        eventContent={renderEventContent(currentEvents)}
         eventClick={handleEventClick}
         eventsSet={handleEvents}
+        dayCellContent={dayCellContent}
     />
       {modalOpen && (
         <Modal onClose={() => setModalOpen(false)}>
@@ -72,7 +91,7 @@ export default function Calendar() {
                   <div className='event-btn-download'>
                     <a className='event-download-btn' href={eventDetail.extendedProps.link} 
                         target="_blank" rel="noopener noreferrer">
-                        <span>Resume docx </span>
+                        <span>Resume.docx </span>
                         <img className='download-icon' src={`/images/download.png`}></img>
                         <img className='download-icon' src={`/images/view.png`}></img>
                     </a>
@@ -84,6 +103,7 @@ export default function Calendar() {
                     </a>
                   </div>
                 </div>
+                <div className='divider'></div>
                 <div className='google-meet-container'>
                   <img src={`/images/logo-meet.png`}></img>
                   <a className='google-meet-btn' href={eventDetail.extendedProps.link} 
@@ -100,15 +120,50 @@ export default function Calendar() {
     </div>
   )
 }
+function transformEvents(events) {
+  const eventMap = {};
 
-function renderEventContent(eventInfo) {
-    return (
-      <>
-        <div className='border-left-container'>
-            <span>{eventInfo.event.extendedProps.job_id.jobRequest_Title}</span>
-            <span>Interviewer, Geetha</span>
-            <span>Time: { moment(eventInfo.event.start).format('hh:mm A') } - { moment(eventInfo.event.end).format('hh:mm A') }</span>
+  events.forEach(event => {
+    const date = moment(event.start).format('YYYY-MM-DD');
+    if (!eventMap[date]) {
+      eventMap[date] = { ...event, additionalCount: 0 };
+    } else {
+      eventMap[date].additionalCount += 1;
+    }
+  });
+  console.log('eventMap ', eventMap);
+  
+  return Object.values(eventMap);
+}
+
+function renderEventContent(events) {
+  return function(eventInfo) {
+    const { event, view } = eventInfo;
+    if (view.type === 'dayGridMonth') {
+      return (
+        <div className="border-left-container">
+          <span>{event.extendedProps.job_id.jobRequest_Title}</span>
+          <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
+          <span>
+            {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
+          </span>
+          {/* {additionalEventsCount > 0 && (
+            <span className="additional-events-count">
+              +{additionalEventsCount} more
+            </span>
+          )} */}
         </div>
-      </>
-    )
+      );
+    }
+
+    return (
+      <div className="border-left-container">
+        <span>{event.extendedProps.job_id.jobRequest_Title}</span>
+        <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
+        <span>
+          Time: {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
+        </span>
+      </div>
+    );
+  };
 }
