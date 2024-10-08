@@ -56,8 +56,8 @@ export default function Calendar() {
         selectMirror={true}
         dayMaxEvents={true}
         events={eventsDate}
-        // eventContent={renderEventContent}
-        eventContent={renderEventContent(currentEvents)}
+        eventContent={renderEventContent}
+        // eventContent={renderEventContent(currentEvents)}
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
@@ -136,9 +136,8 @@ function transformEvents(events) {
   return Object.values(eventMap);
 }
 
-function renderEventContent(events) {
-  return function(eventInfo) {
-    const { event, view } = eventInfo;
+function renderEventContent(eventInfo) {
+  const { event, view } = eventInfo;
     if (view.type === 'dayGridMonth') {
       return (
         <div className="border-left-container">
@@ -165,5 +164,4 @@ function renderEventContent(events) {
         </span>
       </div>
     );
-  };
 }
