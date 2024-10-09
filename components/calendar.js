@@ -10,6 +10,7 @@ import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import Modal from './modal';
+import renderEventContent from './renderEvent';
 
 export default function Calendar() {
     const router = useRouter();
@@ -17,6 +18,8 @@ export default function Calendar() {
     const [modalOpen, setModalOpen] = useState(false);
     const [eventDetail, SetEventDetail] = useState()
     const [filteredEvents, setFilteredEvents] = useState([]);
+    const [openMeeting, setOpenMeeting] = useState(false)
+    const [eventDetailMeeting, SetEventDetailMeeting] = useState()
 
     useEffect(() => {
       const transformedEvents = transformEvents(eventsDate);
@@ -24,8 +27,12 @@ export default function Calendar() {
     }, []);
 
     function handleEventClick(info) {
-        setModalOpen(true)
-        SetEventDetail(info.event)
+        // setModalOpen(true)
+        const filterByEvents = eventsDate.filter(e => 
+            moment(e.start).isSame(moment(info.event.start), 'minute')
+        );
+        SetEventDetailMeeting(filterByEvents)
+        setOpenMeeting(true)
     }
     function handleEvents(events) {
         setCurrentEvents(events)
@@ -41,6 +48,24 @@ export default function Calendar() {
         </div>
       );
     }
+    function weekCellCount(cellInfo) {
+      const eventsForDay = currentEvents.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
+      return (
+        <div className="day-cell">
+          <div>{cellInfo.dayNumberText}</div>
+          {eventsForDay.length > 0 && (
+            <div className="event-count">{eventsForDay.length}</div>
+          )}
+        </div>
+      );
+    }
+    function handleCloseMeeting() {
+      setOpenMeeting(false)
+    }
+    
+    const ColoredLine = () => (
+      <br/>
+    );
   return (
     <div>
       <FullCalendar
@@ -61,6 +86,7 @@ export default function Calendar() {
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
+        // weekCellCount={weekCellCount}
     />
       {modalOpen && (
         <Modal onClose={() => setModalOpen(false)}>
@@ -117,6 +143,26 @@ export default function Calendar() {
           )}
         </Modal>
       )}
+      {openMeeting && (
+        <>
+         <div className="modal">
+            <div className="modal-content">
+              <div className='header-content'>
+                <p>Meetings</p>
+                <span className="close-icon" onClick={handleCloseMeeting}>&times;</span>
+              </div>
+              {openMeeting && eventDetailMeeting.map(item => (
+                  <div className='meeting-events-detail' key={item.id}>
+                    <span>{item.user_det.job_id.jobRequest_Title}</span>
+                    <span>{item.summary} | Interviewer: {item.user_det.handled_by.firstName}</span>
+                    <span>Date: { moment(item.start).format('DD MMM YYYY') } | Time: { moment(item.start).format('hh:mm A') } - {moment(item.end).format('hh:mm A') }</span>
+                    <ColoredLine />
+                  </div>
+                ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -136,32 +182,32 @@ function transformEvents(events) {
   return Object.values(eventMap);
 }
 
-function renderEventContent(eventInfo) {
-  const { event, view } = eventInfo;
-    if (view.type === 'dayGridMonth') {
-      return (
-        <div className="border-left-container">
-          <span>{event.extendedProps.job_id.jobRequest_Title}</span>
-          <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
-          <span>
-            {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
-          </span>
-          {/* {additionalEventsCount > 0 && (
-            <span className="additional-events-count">
-              +{additionalEventsCount} more
-            </span>
-          )} */}
-        </div>
-      );
-    }
+// function renderEventContent(eventInfo) {
+//   const { event, view } = eventInfo;
+//     if (view.type === 'dayGridMonth') {
+//       return (
+//         <div className="border-left-container">
+//           <span>{event.extendedProps.job_id.jobRequest_Title}</span>
+//           <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
+//           <span>
+//             {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
+//           </span>
+//           {/* {additionalEventsCount > 0 && (
+//             <span className="additional-events-count">
+//               +{additionalEventsCount} more
+//             </span>
+//           )} */}
+//         </div>
+//       );
+//     }
 
-    return (
-      <div className="border-left-container">
-        <span>{event.extendedProps.job_id.jobRequest_Title}</span>
-        <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
-        <span>
-          Time: {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
-        </span>
-      </div>
-    );
-}
+//     return (
+//       <div className="border-left-container">
+//         <span>{event.extendedProps.job_id.jobRequest_Title}</span>
+//         <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
+//         <span>
+//           Time: {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
+//         </span>
+//       </div>
+//     );
+// }
