@@ -20,6 +20,15 @@ export default function Calendar() {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [openMeeting, setOpenMeeting] = useState(false)
     const [eventDetailMeeting, SetEventDetailMeeting] = useState()
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+    };
 
     useEffect(() => {
       const transformedEvents = transformEvents(eventsDate);
@@ -34,20 +43,52 @@ export default function Calendar() {
         SetEventDetailMeeting(filterByEvents)
         setOpenMeeting(true)
     }
+    function handleOpenModal(item) {
+      setModalOpen(true)
+      // SetEventDetail(item)
+    }
     function handleEvents(events) {
         setCurrentEvents(events)
     }
     function dayCellContent(cellInfo) {
-      const eventsForDay = currentEvents.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
+      
+      if (cellInfo.view.type === 'dayGridMonth') {
+        const eventsForDay = eventsDate.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
+      
+        const startTimesCount = eventsForDay.reduce((acc, event) => {
+          const startTime = moment(event.start).format();
+          acc[startTime] = (acc[startTime] || 0) + 1;
+          return acc;
+        }, {});
+
+        const duplicateStartEvents = eventsForDay.filter(event => {
+          const startTime = moment(event.start).format();
+          return startTimesCount[startTime] > 1;
+        });
+        return (
+          <div className="day-cell">
+            <div>{cellInfo.dayNumberText}</div>
+            {duplicateStartEvents.length > 0 && (
+              <div className="event-count">{duplicateStartEvents.length}</div>
+            )}
+          </div>
+        );
+      }
+    }
+    function timeCellContent(slotInfo) {
+      const eventsForTimeSlot = eventsDate.filter(event =>
+        moment(event.start).isSame(slotInfo.date, 'minute')
+      );
+    
       return (
-        <div className="day-cell">
-          <div>{cellInfo.dayNumberText}</div>
-          {eventsForDay.length > 0 && (
-            <div className="event-count">{eventsForDay.length}</div>
+        <div className="time-cell">
+          {eventsForTimeSlot.length > 0 && (
+            <div className="event-count">Events: {eventsForTimeSlot.length}</div>
           )}
         </div>
       );
     }
+
     function weekCellCount(cellInfo) {
       const eventsForDay = currentEvents.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
       return (
@@ -66,6 +107,7 @@ export default function Calendar() {
     const ColoredLine = () => (
       <br/>
     );
+    const divHovered = isHovered ? 'meeting-events-detail hovered' : 'meeting-events-detail';
   return (
     <div>
       <FullCalendar
@@ -86,7 +128,6 @@ export default function Calendar() {
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
-        // weekCellCount={weekCellCount}
     />
       {modalOpen && (
         <Modal onClose={() => setModalOpen(false)}>
@@ -152,8 +193,15 @@ export default function Calendar() {
                 <span className="close-icon" onClick={handleCloseMeeting}>&times;</span>
               </div>
               {openMeeting && eventDetailMeeting.map(item => (
-                  <div className='meeting-events-detail' key={item.id}>
-                    <span>{item.user_det.job_id.jobRequest_Title}</span>
+                  <div className={divHovered} key={item.id} onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}>
+                    <div style={{ display: 'flex', gap: '35%'}}>
+                      <span>{item.user_det.job_id.jobRequest_Title}</span>
+                      <div style={{ display: 'flex', gap: '10px'}}>
+                        <img className='download-icon' src={`/images/edit.png`}></img>
+                        <img className='download-icon' src={`/images/delete.png`}></img>
+                      </div>
+                    </div>
                     <span>{item.summary} | Interviewer: {item.user_det.handled_by.firstName}</span>
                     <span>Date: { moment(item.start).format('DD MMM YYYY') } | Time: { moment(item.start).format('hh:mm A') } - {moment(item.end).format('hh:mm A') }</span>
                     <ColoredLine />

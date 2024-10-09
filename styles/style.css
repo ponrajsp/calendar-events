@@ -162,6 +162,9 @@
     margin-top: 10px;
     border-bottom: 1px solid #888
   }
+  .meeting-events-detail.hovered {
+    background-color: #add4ed;
+  }
   .close-icon {
     top: 10px;
     right: 15px;
@@ -193,3 +196,9 @@
   /* hr.solid {
     border-top: 3px solid #bbb;
   } */
+  .duplicate-event {
+    display: none;
+  }
+  .my-div.border-left-container {
+    background-color: lightskyblue;
+  }

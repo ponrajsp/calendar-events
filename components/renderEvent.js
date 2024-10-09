@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import eventsDate from '../utils/calendarfromtoenddate.json'
 
 function renderEventContent(eventInfo) {
   const { event, view } = eventInfo;
@@ -11,12 +12,11 @@ function renderEventContent(eventInfo) {
   
   if (view.type === 'dayGridMonth') {
     const sameDayEvents = eventInfo.view.calendar.getEvents().filter(e => 
-        moment(e.start).isSame(event.start, 'day')
+        moment(e.start).isSame(event.start, 'minute')
     );
-    sameDayEvents.sort((a, b) => moment(a.start).diff(moment(b.start)));
-    // if (event.id !== sameDayEvents[0].id) {
-    //     return null;
-    // }
+    if (event.id !== sameDayEvents[0].id) {
+        return null;
+    }
     return (
       <div className="border-left-container" onClick={renderViewDetail}>
         <span>{event.extendedProps.job_id.jobRequest_Title}</span>
@@ -26,25 +26,27 @@ function renderEventContent(eventInfo) {
         </span>
       </div>
     );
-  } else if (view.type === 'timeGridWeek' || view.type === 'timeGridDay') {
-    // const sameDayEventsWeek = eventInfo.view.calendar.getEvents().filter(e => 
-    //     moment(e.start).isSame(event.start, 'minute')
-    //   );
-    // console.log('sameDayEventsWeek ', sameDayEventsWeek.length);
+  } else  {
+    const sameDayEventsWeek = eventInfo.view.calendar.getEvents().filter(e => 
+        moment(e.start).isSame(event.start, 'minute')
+    );
+    
     // if (event.id !== sameDayEventsWeek[0].id) {
     //     return null;
     // }
     return (
-      <div className="border-left-container">
+      <div className="border-left-container" onClick={renderViewDetail}>
         <span>{event.extendedProps.job_id.jobRequest_Title}</span>
         <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
         <span>
           {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
         </span>
+        {/* {sameDayEventsWeek.length > 1 && (
+           <div className='week-time-count'>{sameDayEventsWeek.length}</div>
+        )} */}
       </div>
     );
   }
-  return null;
 }
 
 export default renderEventContent;
