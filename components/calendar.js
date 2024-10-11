@@ -10,7 +10,9 @@ import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import Modal from './modal';
-import renderEventContent from './renderEvent';
+// import renderEventContent from './renderEvent';
+import CustomEventContent from './customEvent';
+import MeetingDetail from './meetingDetail';
 
 export default function Calendar() {
     const router = useRouter();
@@ -20,15 +22,6 @@ export default function Calendar() {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [openMeeting, setOpenMeeting] = useState(false)
     const [eventDetailMeeting, SetEventDetailMeeting] = useState()
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseEnter = () => {
-      setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-      setIsHovered(false);
-    };
 
     useEffect(() => {
       const transformedEvents = transformEvents(eventsDate);
@@ -103,11 +96,11 @@ export default function Calendar() {
     function handleCloseMeeting() {
       setOpenMeeting(false)
     }
-    
-    const ColoredLine = () => (
-      <br/>
-    );
-    const divHovered = isHovered ? 'meeting-events-detail hovered' : 'meeting-events-detail';
+  
+    // const divHovered = isHovered ? 'meeting-events-detail hovered' : 'meeting-events-detail';
+    const renderEventContent = (eventInfo) => {
+      return <CustomEventContent eventInfo={eventInfo}  meetingActive={openMeeting} />;
+    };
   return (
     <div>
       <FullCalendar
@@ -184,7 +177,8 @@ export default function Calendar() {
           )}
         </Modal>
       )}
-      {openMeeting && (
+      <MeetingDetail openMeeting={openMeeting} eventDetail={eventDetailMeeting} openMeetingChange={handleCloseMeeting} />
+      {/* {openMeeting && (
         <>
          <div className="modal">
             <div className="modal-content">
@@ -210,7 +204,7 @@ export default function Calendar() {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   )
 }
