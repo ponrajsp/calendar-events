@@ -6,8 +6,6 @@ const meetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [hoveredEventId, setHoveredEventId] = useState(null);
     const [meetInfo, setMeetInfo] = useState()
-
-    console.log('eventDetail ', eventDetail);
     
     const handleMouseEnter = (id) => {
         setHoveredEventId(id);
@@ -29,7 +27,6 @@ const meetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
     const ColoredLine = () => (
         <br/>
     );
-    console.log('meetInfo ', meetInfo);
     
     return (
         <div>
