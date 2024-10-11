@@ -45,9 +45,6 @@ const renderEventContent = ({ eventInfo, meetingActive }) => {
         <span>
           {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
         </span>
-        {/* {sameDayEventsWeek.length > 1 && (
-           <div className='week-time-count'>{sameDayEventsWeek.length}</div>
-        )} */}
       </div>
     );
   }
