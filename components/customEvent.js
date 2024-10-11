@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 
-const renderEventContent = ({ eventInfo, meetingActive }) => {
+const RenderEventContent = ({ eventInfo, meetingActive }) => {
   const [eventActive, SetEventActive] = useState(false)
   const [activeId, SetActiveId] = useState()
   const { event, view } = eventInfo;
@@ -50,4 +50,4 @@ const renderEventContent = ({ eventInfo, meetingActive }) => {
   }
 };
 
-export default renderEventContent;
+export default RenderEventContent;

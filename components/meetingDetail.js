@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import Modal from './modal';
 
-const meetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
+const MeetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [hoveredEventId, setHoveredEventId] = useState(null);
     const [meetInfo, setMeetInfo] = useState()
@@ -122,4 +122,4 @@ const meetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
     )
 };
 
-export default meetingDetail;
+export default MeetingDetail;
