@@ -59,6 +59,12 @@
 .fc-daygrid-day-events .fc-daygrid-event-harness a.fc-event .border-left-container.active span {
     color: #fff
 }
+.fc-daygrid-day-events .fc-daygrid-event-harness a.fc-event .border-left-container.hovered {
+    background-color: #add4ed;
+}
+.fc-daygrid-day-events .fc-daygrid-event-harness a.fc-event .border-left-container.hovered span {
+    color: #000;
+}
 .fc-timegrid-col-events .fc-timegrid-event-harness a.fc-timegrid-event {
     display: flex;
     flex-direction: column;
@@ -121,6 +127,7 @@
     height: 100px;
     border: 1px solid #efefef;
     padding: 5px;
+    border-radius: 5px;
 }
 .event-download-btn {
     padding: 10px 5px;
@@ -137,7 +144,7 @@
     color: #3788d8
 }
 .download-icon {
-    width: 20px;
+    width: 15px;
     height: 20px;
 }
 .divider {
@@ -176,15 +183,21 @@
   .meeting-events-detail {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     margin-top: 10px;
     border-bottom: 1px solid #888;
     border-left: 15px solid #3788d8;
     padding-left: 5px;
-    border-radius: 3px;
+    border-radius: 5px;
+    border-top: 1px solid #888;
+    border-right: 1px solid #888;
+    padding: 5px;
   }
   .meeting-events-detail.hovered {
     background-color: #add4ed;
+  }
+  .meeting-events-detail .date-time {
+    font-size: 15px;
   }
   .close-icon {
     top: 10px;

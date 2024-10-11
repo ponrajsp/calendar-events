@@ -16,7 +16,7 @@ const MeetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
     };
 
     const handleCloseMeeting = () => {
-     openMeetingChange(false)
+     openMeetingChange()
     }
 
     const handleOpenGoogleMeet = (item) => {
@@ -54,7 +54,7 @@ const MeetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
                                             </div>
                                         </div>
                                         <span>{item.summary} | Interviewer: {item.user_det.handled_by.firstName}</span>
-                                        <span>Date: { moment(item.start).format('DD MMM YYYY') } | Time: { moment(item.start).format('hh:mm A') } - {moment(item.end).format('hh:mm A') }</span>
+                                        <span className='date-time'>Date: { moment(item.start).format('DD MMM YYYY') } | Time: { moment(item.start).format('hh:mm A') } - {moment(item.end).format('hh:mm A') }</span>
                                         <ColoredLine />
                                     </div>
                                 )
