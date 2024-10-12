@@ -65,7 +65,7 @@
 .fc-daygrid-day-events .fc-daygrid-event-harness a.fc-event .border-left-container.hovered span {
     color: #000;
 }
-.fc-timegrid-col-events .fc-timegrid-event-harness a.fc-timegrid-event {
+.fc-timegrid-col-events .fc-timegrid-event-harness a.fc-timegrid-event{
     display: flex;
     flex-direction: column;
     width: 170px;

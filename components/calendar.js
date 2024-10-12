@@ -9,9 +9,8 @@ import eventsDate from '../utils/calendarfromtoenddate.json'
 import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
 import { useRouter } from 'next/router';
 import moment from 'moment';
-import Modal from './modal';
-// import renderEventContent from './renderEvent';
 import CustomEventContent from './customEvent';
+import WeekTimeCustomEventContent from './weekTimecustomEvent';
 import MeetingDetail from './meetingDetail';
 
 export default function Calendar() {
@@ -22,6 +21,7 @@ export default function Calendar() {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [openMeeting, setOpenMeeting] = useState(false)
     const [eventDetailMeeting, SetEventDetailMeeting] = useState()
+    const [disableEvents, setDisableEvents] = useState(true);
 
     useEffect(() => {
       const transformedEvents = transformEvents(eventsDate);
@@ -98,9 +98,11 @@ export default function Calendar() {
     }
   
     // const divHovered = isHovered ? 'meeting-events-detail hovered' : 'meeting-events-detail';
+    
     const renderEventContent = (eventInfo) => {
-      return <CustomEventContent eventInfo={eventInfo}  meetingActive={openMeeting} />;
+      return <CustomEventContent eventInfo={eventInfo} meetingActive={openMeeting} />;
     };
+    
   return (
     <div>
       <FullCalendar
@@ -108,7 +110,7 @@ export default function Calendar() {
         headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listDay'
             }}
         initialView="dayGridMonth"
         editable={true}
@@ -117,14 +119,19 @@ export default function Calendar() {
         dayMaxEvents={true}
         events={eventsDate}
         eventContent={renderEventContent}
-        // eventContent={renderEventContent(currentEvents)}
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
+        viewDidMount={(arg) => {
+          disableColumnEvents(arg.el);
+        }}
     />
       <MeetingDetail openMeeting={openMeeting} eventDetail={eventDetailMeeting} openMeetingChange={handleCloseMeeting} />
     </div>
   )
+}
+const disableColumnEvents = (el) => {
+  const columns = el.querySelectorAll('.fc-timegrid-col-events');
 }
 function transformEvents(events) {
   const eventMap = {};
@@ -141,33 +148,3 @@ function transformEvents(events) {
   
   return Object.values(eventMap);
 }
-
-// function renderEventContent(eventInfo) {
-//   const { event, view } = eventInfo;
-//     if (view.type === 'dayGridMonth') {
-//       return (
-//         <div className="border-left-container">
-//           <span>{event.extendedProps.job_id.jobRequest_Title}</span>
-//           <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
-//           <span>
-//             {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
-//           </span>
-//           {/* {additionalEventsCount > 0 && (
-//             <span className="additional-events-count">
-//               +{additionalEventsCount} more
-//             </span>
-//           )} */}
-//         </div>
-//       );
-//     }
-
-//     return (
-//       <div className="border-left-container">
-//         <span>{event.extendedProps.job_id.jobRequest_Title}</span>
-//         <span>Interviewer: {event.extendedProps.user_det.handled_by.firstName}</span>
-//         <span>
-//           Time: {moment(event.start).format('hh:mm A')} - {moment(event.end).format('hh:mm A')}
-//         </span>
-//       </div>
-//     );
-// }
