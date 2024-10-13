@@ -69,7 +69,7 @@
     display: flex;
     flex-direction: column;
     width: 170px;
-    height: 70px;
+    height: 60px;
     background-color: #fff;
     border-left: 15px solid;
     border-left-color: #3788d8;
@@ -235,4 +235,18 @@
   }
   .my-div.border-left-container {
     background-color: lightskyblue;
+  }
+  .filterCounts {
+    /* clear: both; */
+    border: 1px solid #000;
+    border-radius: 50%;
+    /* text-align: end; */
+    /* padding: 10px; */
+    /* width: 20%; */
+    position: absolute;
+    top: 0;
+    right: 2px;
+    width: 13px;
+    text-align: center;
+    background: gold;
   }

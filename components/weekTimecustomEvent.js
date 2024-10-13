@@ -21,9 +21,6 @@ const RenderEventContent = ({ eventInfo, meetingActive }) => {
       SetEventActive(true)
       SetActiveId(event.id);
     }
-    // const isHovered = hoveredEventId === event.id;
-    // const divClass = isHovered ? 'border-left-container hovered' : 'border-left-container';
-    // const classActive = meetingActive && activeId === event.id ? 'border-left-container active' : 'border-left-container';
     return (
       <>
         <div className='border-left-container' onClick={() => renderViewDetail(eventInfo)} key={eventInfo.id} onMouseEnter={() => handleMouseEnter(eventInfo.id)}

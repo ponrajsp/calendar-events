@@ -10,7 +10,6 @@ import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import CustomEventContent from './customEvent';
-import WeekTimeCustomEventContent from './weekTimecustomEvent';
 import MeetingDetail from './meetingDetail';
 
 export default function Calendar() {
@@ -62,36 +61,11 @@ export default function Calendar() {
           <div className="day-cell">
             <div>{cellInfo.dayNumberText}</div>
             {duplicateStartEvents.length > 0 && (
-              <div className="event-count">{duplicateStartEvents.length}</div>
+              <div className="event-count"></div>
             )}
           </div>
         );
       }
-    }
-    function timeCellContent(slotInfo) {
-      const eventsForTimeSlot = eventsDate.filter(event =>
-        moment(event.start).isSame(slotInfo.date, 'minute')
-      );
-    
-      return (
-        <div className="time-cell">
-          {eventsForTimeSlot.length > 0 && (
-            <div className="event-count">Events: {eventsForTimeSlot.length}</div>
-          )}
-        </div>
-      );
-    }
-
-    function weekCellCount(cellInfo) {
-      const eventsForDay = currentEvents.filter(event => moment(event.start).isSame(cellInfo.date, 'day'));
-      return (
-        <div className="day-cell">
-          <div>{cellInfo.dayNumberText}</div>
-          {eventsForDay.length > 0 && (
-            <div className="event-count">{eventsForDay.length}</div>
-          )}
-        </div>
-      );
     }
     function handleCloseMeeting() {
       setOpenMeeting(false)
@@ -100,7 +74,7 @@ export default function Calendar() {
     // const divHovered = isHovered ? 'meeting-events-detail hovered' : 'meeting-events-detail';
     
     const renderEventContent = (eventInfo) => {
-      return <CustomEventContent eventInfo={eventInfo} meetingActive={openMeeting} />;
+      return <CustomEventContent eventInfo={eventInfo} meetingActive={openMeeting} filteredEvents={filteredEvents} />;
     };
     
   return (
@@ -122,16 +96,10 @@ export default function Calendar() {
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
-        viewDidMount={(arg) => {
-          disableColumnEvents(arg.el);
-        }}
     />
       <MeetingDetail openMeeting={openMeeting} eventDetail={eventDetailMeeting} openMeetingChange={handleCloseMeeting} />
     </div>
   )
-}
-const disableColumnEvents = (el) => {
-  const columns = el.querySelectorAll('.fc-timegrid-col-events');
 }
 function transformEvents(events) {
   const eventMap = {};
@@ -144,7 +112,7 @@ function transformEvents(events) {
       eventMap[date].additionalCount += 1;
     }
   });
-  console.log('eventMap ', eventMap);
+  console.log('eventMap   ', eventMap);
   
   return Object.values(eventMap);
 }
