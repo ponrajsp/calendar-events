@@ -4,10 +4,10 @@ import '../styles/style.css'
 
 const CalendarPage = ({ events }) => {
     return (
-        <div>
-            <h1>Your Todos</h1>
+        <>
+            <h2>Your Todos</h2>
             <Calendar events={events} />
-        </div>
+        </>
     );
 };
 

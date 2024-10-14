@@ -48,10 +48,10 @@ const MeetingDetail = ({ openMeeting, eventDetail, openMeetingChange }) => {
                                         onMouseLeave={handleMouseLeave} onClick={() => handleOpenGoogleMeet(item)}>
                                         <div style={{ display: 'flex', gap: '35%'}}>
                                             <span>{item.user_det.job_id.jobRequest_Title}</span>
-                                            <div style={{ display: 'flex', gap: '10px'}}>
-                                            <img className='download-icon' src={`/images/edit.png`}></img>
-                                            <img className='download-icon' src={`/images/delete.png`}></img>
-                                            </div>
+                                            {/* <div style={{ display: 'flex', gap: '10px'}}>
+                                                <img className='download-icon' src={`/images/edit.png`}></img>
+                                                <img className='download-icon' src={`/images/delete.png`}></img>
+                                            </div> */}
                                         </div>
                                         <span>{item.summary} | Interviewer: {item.user_det.handled_by.firstName}</span>
                                         <span className='date-time'>Date: { moment(item.start).format('DD MMM YYYY') } | Time: { moment(item.start).format('hh:mm A') } - {moment(item.end).format('hh:mm A') }</span>

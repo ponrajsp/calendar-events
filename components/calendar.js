@@ -14,6 +14,7 @@ import MeetingDetail from './meetingDetail';
 
 export default function Calendar() {
     const router = useRouter();
+    const [calendarHeight, setCalendarHeight] = useState('100vh');
     const [currentEvents, setCurrentEvents] = useState([])
     const [modalOpen, setModalOpen] = useState(false);
     const [eventDetail, SetEventDetail] = useState()
@@ -25,6 +26,25 @@ export default function Calendar() {
     useEffect(() => {
       const transformedEvents = transformEvents(eventsDate);
       setFilteredEvents(transformedEvents);
+    }, []);
+
+    const updateCalendarHeight = () => {
+      // Calculate the height of the header toolbar (if any)
+      const headerHeight = document.querySelector('.fc-header-toolbar')?.offsetHeight || 0;
+      // Calculate the height of any fixed elements at the top or bottom of the page
+      const otherFixedHeights = document.querySelector('.fixed-header')?.offsetHeight || 0;
+      // Calculate the available height
+      const availableHeight = window.innerHeight - headerHeight - otherFixedHeights;
+      setCalendarHeight(availableHeight);
+    };
+  
+    useEffect(() => {
+      updateCalendarHeight();
+      window.addEventListener('resize', updateCalendarHeight);
+  
+      return () => {
+        window.removeEventListener('resize', updateCalendarHeight);
+      };
     }, []);
 
     function handleEventClick(info) {
@@ -87,6 +107,7 @@ export default function Calendar() {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listDay'
             }}
         initialView="dayGridMonth"
+        // height={calendarHeight}
         editable={true}
         selectable={true}
         selectMirror={true}
@@ -96,6 +117,7 @@ export default function Calendar() {
         eventClick={handleEventClick}
         eventsSet={handleEvents}
         dayCellContent={dayCellContent}
+        fixedWeekCount={false}
     />
       <MeetingDetail openMeeting={openMeeting} eventDetail={eventDetailMeeting} openMeetingChange={handleCloseMeeting} />
     </div>

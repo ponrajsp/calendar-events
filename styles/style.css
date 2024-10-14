@@ -192,6 +192,7 @@
     border-top: 1px solid #888;
     border-right: 1px solid #888;
     padding: 5px;
+    height: 70px;
   }
   .meeting-events-detail.hovered {
     background-color: #add4ed;
